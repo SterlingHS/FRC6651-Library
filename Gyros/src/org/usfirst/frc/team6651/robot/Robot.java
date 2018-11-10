@@ -37,9 +37,9 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void autonomousInit() {
-		// DT.tankDrive(0,0);
-		// gyro.reset();
-		gyro.calibrate();
+
+		gyro.reset();
+		// gyro.calibrate();
 	}
 	
 
