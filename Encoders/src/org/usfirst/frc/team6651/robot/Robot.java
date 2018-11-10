@@ -14,14 +14,6 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
 
-
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.properties file in the
- * project.
- */
 public class Robot extends IterativeRobot {
 	
 	public static DifferentialDrive DT;
@@ -52,17 +44,7 @@ public class Robot extends IterativeRobot {
 		LeftEncoder.reset();
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
-	 *
-	 * <p>You can add additional auto modes by adding additional comparisons to
-	 * the switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
+
 	@Override
 	public void autonomousInit() {
 		DT.tankDrive(-.6,-.6);
@@ -80,9 +62,8 @@ public class Robot extends IterativeRobot {
 				reach = 1;
 		return reach;
 	}
-	/**
-	 * This function is called periodically during autonomous.
-	 */
+
+	
 	@Override
 	public void autonomousPeriodic() {
 		countRight = RightEncoder.get();
@@ -95,18 +76,14 @@ public class Robot extends IterativeRobot {
 		else DT.tankDrive(-.65,-.65);
 	}
 
-	/**
-	 * This function is called periodically during operator control.
-	 */
+
 	@Override
 	public void teleopPeriodic() {
-		int X_axis = 1, Y_axis = 0, Rotation = 2, Throttle = 3;
+		int X_axis = 1, Y_axis = 0;
 		double left = PS4.getRawAxis(X_axis); 
 		double right = PS4.getRawAxis(Y_axis); 
 		DT.arcadeDrive(left,right);
-		
-		// double slideSpeed = PS4.getRawAxis(Rotation);
-		// slider.set(slideSpeed);
+
 		countRight = RightEncoder.get();
 		countLeft = LeftEncoder.get();
 		if(previousRight != countRight || previousLeft != countLeft)
