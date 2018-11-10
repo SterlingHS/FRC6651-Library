@@ -25,20 +25,16 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
  */
 public class Robot extends IterativeRobot {
 	
-	// public static DifferentialDrive DT;
 	public static MecanumDrive DTMec;
 	
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
-	// Gyro gyro = new AnalogGyro(0);
+
 	double angle;
 	double kp=0.004;
 	double tick_per_degree=0.000144114;
 	
 	Joystick PS4 = new Joystick(0);
 	int butterflyButtonId = 1;
-	// Button butterflyButtonChange = new JoystickButton(PS4, butterflyButtonId);
-	// Button butterflyButtonUp = new JoystickButton(PS4, 1);
-	// Button butterflyButtonDown = new JoystickButton(PS4, 2);
 	
 	double MAXPOWER=0.75;
 	WPI_TalonSRX talon10;
@@ -51,22 +47,15 @@ public class Robot extends IterativeRobot {
 	boolean changeOfState = true;
 	DoubleSolenoid.Value UP=DoubleSolenoid.Value.kForward, DOWN=DoubleSolenoid.Value.kReverse;
 	DoubleSolenoid.Value butterflyState = DOWN;
-
-	// c.setClosedLoopControl(true);  // Start compressor control
-	// c.setClosedLoopControl(false); // Stop compressor control
-	// exampleSolenoid.set(true);  or  exampleSolenoid.set(false);
 	
 	@Override
 	public void robotInit() {
 		talon10 = new WPI_TalonSRX(10);
 		talon12 = new WPI_TalonSRX(12);
-		//SpeedControllerGroup left = new SpeedControllerGroup(talon10, talon12);
 
 		talon11 = new WPI_TalonSRX(11);
 		talon13 = new WPI_TalonSRX(13);
-		//SpeedControllerGroup right = new SpeedControllerGroup(talon11, talon13);
-		
-		// DT = new DifferentialDrive(left, right);
+
 		DTMec = new MecanumDrive(talon10, talon11, talon12, talon13);
 		
 		c = new Compressor(0);
@@ -75,6 +64,7 @@ public class Robot extends IterativeRobot {
 		butterflySolenoid = new DoubleSolenoid(0, 1);
 		butterflySolenoid.set(butterflyState);
 
+		// Calibrate once in a while
 		// gyro.calibrate();
 		gyro.reset();
 
@@ -119,8 +109,10 @@ public class Robot extends IterativeRobot {
 		// System.out.println("Angle at: " + angle + "    The angle: " + (int)(angle/tick_per_degree));
 		
 		if (butterflyState == DOWN)
-			// DT.arcadeDrive(forward, -slide);
-			DTMec.driveCartesian(forward, 0, -slide);
+		{
+			turn = slide;
+			slide = 0;
+		}
 		else {
 			if (POV != -1) System.out.println("POV " + POV);
 			switch(POV)
@@ -168,30 +160,21 @@ public class Robot extends IterativeRobot {
 					case -1:
 						break;
 				}
-			// System.out.println(POV);
-			DTMec.driveCartesian(forward, -slide, -turn);
 		}
-
-		if (PS4.getRawButton(butterflyButtonId) == true && changeOfState == true) {
-			// System.out.println("Button pushed");
+		DTMec.driveCartesian(forward, -slide, -turn);
+		
+		if (PS4.getRawButton(butterflyButtonId) == true && changeOfState == true) 
+		{
 			if (butterflyState == DOWN) butterflyState = UP;
 			else 						butterflyState = DOWN;
 			changeOfState = false;
 			butterflySolenoid.set(butterflyState);
 		}
 		
-		//  Reset state
+		//  Reset state for driving mode
 		if (PS4.getRawButton(butterflyButtonId) == false && changeOfState == false)  changeOfState = true;
 
-		
 
-		// 2 buttons control - one to go up, one to go down
-		/* if (PS4.getRawButton(1) == true) {
-			butterflySolenoid.set(DoubleSolenoid.Value.kForward);
-		}
-		if (PS4.getRawButton(1) == false && PS4.getRawButton(2) == true) {
-			butterflySolenoid.set(DoubleSolenoid.Value.kReverse);
-		}*/
 	}
 
 	/**
