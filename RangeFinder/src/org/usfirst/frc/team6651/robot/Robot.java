@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
 		
-		ai = new AnalogInput(0);
+		ai = new AnalogInput(1);
 	}
 
 	@Override
@@ -51,13 +51,13 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		int raw = ai.getValue();
+		// int raw = ai.getValue();
 		double kdistance = 5*1024*2.54;
 		double volts = ai.getVoltage();
-		int averageRaw = ai.getAverageValue();
-		double averageVolts = ai.getAverageVoltage();
+		// int averageRaw = ai.getAverageValue();
+		// double averageVolts = ai.getAverageVoltage();
 		
-		System.out.println("volts " + volts + " voltsDistance: " + volts*67.8615);
+		System.out.println("volts: " + volts + " --- volts*constance: " + volts*67.8615 + " --- volts/kdistance: " + volts/kdistance);
 
 	}
 
